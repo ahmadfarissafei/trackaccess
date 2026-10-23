@@ -1,31 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-loc="mdd">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1a3f7a">
+<meta name="theme-color" content="#0d5c63">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="ECID Access">
+<meta name="apple-mobile-web-app-title" content="Track Access">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>ECID Track Access Checker</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<title>Track Access Checker</title>
 <style>
-:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#d5dcd9;--ok:#1f7a4d;--okbg:#e3f3ea;--bad:#b3261e;--badbg:#fbe6e4;--a:#1a3f7a;--a2:#9a5b00;
+:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#d5dcd9;--ok:#1f7a4d;--okbg:#e3f3ea;--bad:#b3261e;--badbg:#fbe6e4;--a:#0d5c63;--a2:#9a5b00;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1417;--card:#182026;--ink:#e8eef2;--mute:#9aa9b3;--line:#2b3740;--ok:#5fd09a;--okbg:#14352558;--bad:#ff8d85;--badbg:#3d1a18;--a:#7fb0ff;--a2:#f0b45a}}
+:root[data-loc="ecid"]{--a:#1a3f7a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1715;--card:#18221f;--ink:#e8efec;--mute:#9aaaa4;--line:#2b3834;--ok:#5fd09a;--okbg:#14352558;--bad:#ff8d85;--badbg:#3d1a18;--a:#6fd0d8;--a2:#f0b45a}
+:root[data-loc="ecid"]:not([data-theme="light"]){--a:#7fb0ff}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:560px;margin:0 auto;padding:16px 14px 40px}
 h1{font-size:20px;margin:4px 0 2px}
 .sub{color:var(--mute);font-size:13px;margin:0 0 14px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
+.tab{border:0;background:transparent;color:var(--ink);border-radius:9px;padding:11px 0;font:700 16px system-ui;cursor:pointer}
+.tab.on{background:var(--a);color:var(--bg)}
+.tab:focus-visible,.chip:focus-visible{outline:3px solid var(--a);outline-offset:1px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
 .card h2{font-size:14px;margin:0 0 8px}
 .chips{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
 .chip{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:10px 0;font:600 16px system-ui;cursor:pointer}
-.chip:focus-visible{outline:3px solid var(--a);outline-offset:1px}
 .r1 .chip.on{background:var(--a);border-color:var(--a);color:var(--bg)}
 .r2 .chip.on{background:var(--a2);border-color:var(--a2);color:var(--bg)}
 .res{border-radius:12px;padding:14px;margin-bottom:12px;border:2px solid}
@@ -49,8 +54,9 @@ td.hl{outline:3px solid var(--ink);outline-offset:-3px}
 </head>
 <body>
 <main>
-<h1>ECID track access checker</h1>
-<p class="sub">Protected zone table for ECID. Pick one work zone per request.</p>
+<h1>Track access checker</h1>
+<div class="tabs" role="tablist"><button class="tab on" id="t-mdd" role="tab">MDD</button><button class="tab" id="t-ecid" role="tab">ECID</button></div>
+<p class="sub" id="sub"></p>
 
 <div class="card r1"><h2>Request 1: work zone</h2><div class="chips" id="c1"></div></div>
 <div class="card r2"><h2>Request 2: work zone</h2><div class="chips" id="c2"></div></div>
@@ -63,16 +69,45 @@ td.hl{outline:3px solid var(--ink);outline-offset:-3px}
 <p class="note">Red X means the two requests must merge into one possession. Tap a cell to load that pair.</p>
 </div>
 
-<p class="note">Zone K (RS Workshop, Pway/Loco workshop) has no protected zones listed, so it never conflicts in this table. This checker applies the same rule as the Mandai Depot circular: a conflict exists when one request&rsquo;s work zone is a protected zone of the other. Confirm the rule and table against the ECID procedure before operational use.</p>
+<p class="note" id="foot"></p>
 </main>
 <script>
-var Z=["A","B","C","D","E","F","G","H","I","J","K","L"];
-var P={A:["B","E","G","H"],B:["A","C","D","H","I","L"],C:["B","D"],D:["B","C","L"],E:["A"],F:["L"],G:["A","H"],H:["A","B","G","I"],I:["B","H","J","L"],J:["I","L"],K:[],L:["B","D","F","I","J"]};
-var S={A:"RT1 & RT4",B:"RT2",C:"RT3",D:"TWP",G:"S1\u2013S12",H:"S13\u2013S24",I:"S25\u2013S32",J:"S33\u2013S38",K:"RS Workshop, Pway/Loco workshop"};
-var sel=[null,null];
+var D={
+mdd:{
+ sub:"MDD: Operations Circular 48/2025, Table 1. Pick one work zone per request.",
+ color:"#0d5c63",
+ Z:["A","B","C","D","E","F","G","H","I","J","K"],
+ P:{A:["B","F"],B:["A","C"],C:["B","D","G"],D:["C","G","F"],E:["F"],F:["E","A","D","G"],G:["C","D","F"],H:["I"],I:["H","J"],J:["I","K"],K:["J"]},
+ S:{H:"S3\u2013S12",I:"S13\u2013S24",J:"S25\u2013S36",K:"S37\u2013S45"},
+ foot:"The Level Crossing is a protected zone in Annex A but is not in Table 1, so it is not checked here. Zone D needs no protected zone when the work is at the Wash Plant; that exception is not applied. Check the original circular before operational use."
+},
+ecid:{
+ sub:"ECID: protected zone table. Pick one work zone per request.",
+ color:"#1a3f7a",
+ Z:["A","B","C","D","E","F","G","H","I","J","K","L"],
+ P:{A:["B","E","G","H"],B:["A","C","D","H","I","L"],C:["B","D"],D:["B","C","L"],E:["A"],F:["L"],G:["A","H"],H:["A","B","G","I"],I:["B","H","J","L"],J:["I","L"],K:[],L:["B","D","F","I","J"]},
+ S:{A:"RT1 & RT4",B:"RT2",C:"RT3",D:"TWP",G:"S1\u2013S12",H:"S13\u2013S24",I:"S25\u2013S32",J:"S33\u2013S38",K:"RS Workshop, Pway/Loco workshop"},
+ foot:"Zone K (RS Workshop, Pway/Loco workshop) has no protected zones listed, so it never conflicts in this table. This checker applies the same rule as the Mandai Depot circular: a conflict exists when one request\u2019s work zone is a protected zone of the other. Confirm the rule and table against the ECID procedure before operational use."
+}};
+var loc="mdd",Z,P,S,sel=[null,null];
+try{var sv=localStorage.getItem("trackLoc");if(sv&&D[sv])loc=sv}catch(e){}
 function conflict(a,b){return a!==b&&(P[a].indexOf(b)>-1||P[b].indexOf(a)>-1)}
 function nm(z){return "Zone "+z+(S[z]?" ("+S[z]+")":"")}
 function pl(z){return P[z].length?P[z].join(", "):"none listed"}
+function setLoc(k){
+  loc=k;var d=D[k];Z=d.Z;P=d.P;S=d.S;sel=[null,null];
+  document.documentElement.setAttribute("data-loc",k);
+  document.getElementById("sub").textContent=d.sub;
+  document.getElementById("foot").textContent=d.foot;
+  document.getElementById("t-mdd").className="tab"+(k==="mdd"?" on":"");
+  document.getElementById("t-ecid").className="tab"+(k==="ecid"?" on":"");
+  document.getElementById("t-mdd").setAttribute("aria-selected",k==="mdd");
+  document.getElementById("t-ecid").setAttribute("aria-selected",k==="ecid");
+  var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d.color);
+  document.title=k.toUpperCase()+" Track Access Checker";
+  try{localStorage.setItem("trackLoc",k)}catch(e){}
+  render();
+}
 function chips(i){
   var el=document.getElementById("c"+(i+1));el.innerHTML="";
   Z.forEach(function(z){
@@ -120,9 +155,9 @@ function mx(){
     td.onclick=function(){sel=[td.dataset.r,td.dataset.c];render()};
   });
 }
-render();
-</script>
-<script>
+document.getElementById("t-mdd").onclick=function(){setLoc("mdd")};
+document.getElementById("t-ecid").onclick=function(){setLoc("ecid")};
+setLoc(loc);
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}
 </script>
 </body>
