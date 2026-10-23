@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0d5c63">
+<meta name="theme-color" content="#1a3f7a">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MDD Access">
+<meta name="apple-mobile-web-app-title" content="ECID Access">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<title>MDD Track Access Checker</title>
+<title>ECID Track Access Checker</title>
 <style>
-:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#d5dcd9;--ok:#1f7a4d;--okbg:#e3f3ea;--bad:#b3261e;--badbg:#fbe6e4;--a:#0d5c63;--a2:#9a5b00;--a2bg:#fbefd9;--abg:#dcefef;
+:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#d5dcd9;--ok:#1f7a4d;--okbg:#e3f3ea;--bad:#b3261e;--badbg:#fbe6e4;--a:#1a3f7a;--a2:#9a5b00;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1715;--card:#18221f;--ink:#e8efec;--mute:#9aaaa4;--line:#2b3834;--ok:#5fd09a;--okbg:#14352558;--bad:#ff8d85;--badbg:#3d1a18;--a:#6fd0d8;--a2:#f0b45a;--a2bg:#3a2a0e;--abg:#12363a}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1417;--card:#182026;--ink:#e8eef2;--mute:#9aa9b3;--line:#2b3740;--ok:#5fd09a;--okbg:#14352558;--bad:#ff8d85;--badbg:#3d1a18;--a:#7fb0ff;--a2:#f0b45a}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 main{max-width:560px;margin:0 auto;padding:16px 14px 40px}
@@ -28,7 +28,6 @@ h1{font-size:20px;margin:4px 0 2px}
 .chip:focus-visible{outline:3px solid var(--a);outline-offset:1px}
 .r1 .chip.on{background:var(--a);border-color:var(--a);color:var(--bg)}
 .r2 .chip.on{background:var(--a2);border-color:var(--a2);color:var(--bg)}
-.sel{font-size:13px;color:var(--mute);margin-top:8px}
 .res{border-radius:12px;padding:14px;margin-bottom:12px;border:2px solid}
 .res.ok{background:var(--okbg);border-color:var(--ok)}
 .res.bad{background:var(--badbg);border-color:var(--bad)}
@@ -36,12 +35,11 @@ h1{font-size:20px;margin:4px 0 2px}
 .res .big{font-size:20px;font-weight:700;margin:0 0 4px}
 .res.ok .big{color:var(--ok)}.res.bad .big{color:var(--bad)}
 .res p{margin:4px 0;font-size:14px}
-.row{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
-.row:first-of-type{border-top:0}
-.tag{font-weight:600}
+.row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
+.tag{font-weight:600;text-align:right}
 .mx{overflow-x:auto}
 table{border-collapse:collapse;margin:0 auto}
-th,td{width:30px;height:30px;text-align:center;font-size:13px;border:1px solid var(--line);padding:0}
+th,td{width:28px;height:30px;text-align:center;font-size:13px;border:1px solid var(--line);padding:0}
 th{color:var(--mute);font-weight:600}
 td.x{background:var(--badbg);color:var(--bad);font-weight:700}
 td.s{background:var(--line)}
@@ -51,8 +49,8 @@ td.hl{outline:3px solid var(--ink);outline-offset:-3px}
 </head>
 <body>
 <main>
-<h1>MDD track access checker</h1>
-<p class="sub">Operations Circular 48/2025, Table 1. Pick one work zone per request.</p>
+<h1>ECID track access checker</h1>
+<p class="sub">Protected zone table for ECID. Pick one work zone per request.</p>
 
 <div class="card r1"><h2>Request 1: work zone</h2><div class="chips" id="c1"></div></div>
 <div class="card r2"><h2>Request 2: work zone</h2><div class="chips" id="c2"></div></div>
@@ -65,15 +63,16 @@ td.hl{outline:3px solid var(--ink);outline-offset:-3px}
 <p class="note">Red X means the two requests must merge into one possession. Tap a cell to load that pair.</p>
 </div>
 
-<p class="note">The Level Crossing is a protected zone in Annex A but is not in Table 1, so it is not checked here. Zone D needs no protected zone when the work is at the Wash Plant; that exception is not applied. Check the original circular before operational use.</p>
+<p class="note">Zone K (RS Workshop, Pway/Loco workshop) has no protected zones listed, so it never conflicts in this table. This checker applies the same rule as the Mandai Depot circular: a conflict exists when one request&rsquo;s work zone is a protected zone of the other. Confirm the rule and table against the ECID procedure before operational use.</p>
 </main>
 <script>
-var Z=["A","B","C","D","E","F","G","H","I","J","K"];
-var P={A:["B","F"],B:["A","C"],C:["B","D","G"],D:["C","G","F"],E:["F"],F:["E","A","D","G"],G:["C","D","F"],H:["I"],I:["H","J"],J:["I","K"],K:["J"]};
-var S={H:"S3–S12",I:"S13–S24",J:"S25–S36",K:"S37–S45"};
+var Z=["A","B","C","D","E","F","G","H","I","J","K","L"];
+var P={A:["B","E","G","H"],B:["A","C","D","H","I","L"],C:["B","D"],D:["B","C","L"],E:["A"],F:["L"],G:["A","H"],H:["A","B","G","I"],I:["B","H","J","L"],J:["I","L"],K:[],L:["B","D","F","I","J"]};
+var S={A:"RT1 & RT4",B:"RT2",C:"RT3",D:"TWP",G:"S1\u2013S12",H:"S13\u2013S24",I:"S25\u2013S32",J:"S33\u2013S38",K:"RS Workshop, Pway/Loco workshop"};
 var sel=[null,null];
 function conflict(a,b){return a!==b&&(P[a].indexOf(b)>-1||P[b].indexOf(a)>-1)}
 function nm(z){return "Zone "+z+(S[z]?" ("+S[z]+")":"")}
+function pl(z){return P[z].length?P[z].join(", "):"none listed"}
 function chips(i){
   var el=document.getElementById("c"+(i+1));el.innerHTML="";
   Z.forEach(function(z){
@@ -84,8 +83,8 @@ function chips(i){
   });
 }
 function protRows(a,b){
-  return '<div class="row"><span>'+nm(a)+' needs</span><span class="tag">'+P[a].join(", ")+'</span></div>'+
-         '<div class="row"><span>'+nm(b)+' needs</span><span class="tag">'+P[b].join(", ")+'</span></div>';
+  return '<div class="row"><span>'+nm(a)+' needs</span><span class="tag">'+pl(a)+'</span></div>'+
+         '<div class="row"><span>'+nm(b)+' needs</span><span class="tag">'+pl(b)+'</span></div>';
 }
 function render(){
   chips(0);chips(1);
@@ -110,7 +109,7 @@ function mx(){
   Z.forEach(function(r){
     h+="<tr><th>"+r+"</th>";
     Z.forEach(function(c){
-      var cls=r===c?"s":(conflict(r,c)?"x":""),txt=r===c?"":(conflict(r,c)?"\u2716":"");
+      var cf=conflict(r,c),cls=r===c?"s":(cf?"x":""),txt=cf?"\u2716":"";
       var on=(sel[0]===r&&sel[1]===c)||(sel[0]===c&&sel[1]===r);
       h+='<td class="'+cls+(on?" hl":"")+'" data-r="'+r+'" data-c="'+c+'">'+txt+"</td>";
     });

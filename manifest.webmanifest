@@ -1,13 +1,13 @@
 {
-  "name": "MDD Track Access Checker",
-  "short_name": "MDD Access",
-  "description": "MDD Track Access checker (works offline)",
+  "name": "ECID Track Access Checker",
+  "short_name": "ECID Access",
+  "description": "ECID Track Access checker (works offline)",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f3f5f4",
-  "theme_color": "#0d5c63",
+  "theme_color": "#1a3f7a",
   "icons": [
     {
       "src": "icons/icon-192.png",
