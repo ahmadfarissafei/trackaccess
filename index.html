@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0d5c63">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0d7c86">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Track Access">
@@ -13,77 +14,138 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Track Access Checker</title>
 <style>
-:root{--bg:#f3f5f4;--card:#fff;--ink:#14201c;--mute:#5d6b66;--line:#d5dcd9;--ok:#1f7a4d;--okbg:#e3f3ea;--bad:#b3261e;--badbg:#fbe6e4;--a:#0d5c63;--a2:#9a5b00;
-box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-:root[data-loc="ecid"]{--a:#1a3f7a}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1715;--card:#18221f;--ink:#e8efec;--mute:#9aaaa4;--line:#2b3834;--ok:#5fd09a;--okbg:#14352558;--bad:#ff8d85;--badbg:#3d1a18;--a:#6fd0d8;--a2:#f0b45a}
-:root[data-loc="ecid"]:not([data-theme="light"]){--a:#7fb0ff}}
+:root{
+  --bg:#e9edf0;--surface:#ffffff;--ink:#10181e;--mute:#566673;--line:#cfd8de;
+  --housing:#1b242b;--dim:#3a4650;
+  --red:#d23a3f;--redbg:#fdeaea;--green:#17855c;--greenbg:#e2f5ec;--amber:#c27a00;
+  --a:#0d7c86;--on-a:#ffffff;--on-amber:#1a1100;
+  --font:"Avenir Next","Segoe UI",Roboto,"Helvetica Neue",Arial,system-ui,sans-serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
+}
+:root[data-loc="ecid"]{--a:#2a5db0}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0e1418;--surface:#161e24;--ink:#e7edf1;--mute:#93a3ae;--line:#27333b;
+    --housing:#05090b;--dim:#26323a;
+    --red:#ff6b70;--redbg:#2e1719;--green:#3ddc9a;--greenbg:#112a21;--amber:#f2a93b;
+    --a:#3cc3cf;--on-a:#04181a}
+  :root[data-loc="ecid"]{--a:#7fb0ff;--on-a:#06142b}
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-main{max-width:560px;margin:0 auto;padding:16px 14px 40px}
-h1{font-size:20px;margin:4px 0 2px}
-.sub{color:var(--mute);font-size:13px;margin:0 0 14px}
-.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px}
-.tab{border:0;background:transparent;color:var(--ink);border-radius:9px;padding:11px 0;font:700 16px system-ui;cursor:pointer}
-.tab.on{background:var(--a);color:var(--bg)}
-.tab:focus-visible,.chip:focus-visible{outline:3px solid var(--a);outline-offset:1px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
-.card h2{font-size:14px;margin:0 0 8px}
-.chips{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-.chip{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:10px 0;font:600 16px system-ui;cursor:pointer}
-.r1 .chip.on{background:var(--a);border-color:var(--a);color:var(--bg)}
-.r2 .chip.on{background:var(--a2);border-color:var(--a2);color:var(--bg)}
-.res{border-radius:12px;padding:14px;margin-bottom:12px;border:2px solid}
-.res.ok{background:var(--okbg);border-color:var(--ok)}
-.res.bad{background:var(--badbg);border-color:var(--bad)}
-.res.idle{background:var(--card);border:1px dashed var(--line);color:var(--mute)}
-.res .big{font-size:20px;font-weight:700;margin:0 0 4px}
-.res.ok .big{color:var(--ok)}.res.bad .big{color:var(--bad)}
-.res p{margin:4px 0;font-size:14px}
-.row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-top:1px solid var(--line);font-size:14px}
-.tag{font-weight:600;text-align:right}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--font);-webkit-tap-highlight-color:transparent}
+main{max-width:560px;margin:0 auto;padding:18px 14px 44px}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+
+/* header */
+header{margin:0 2px 14px}
+h1{font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-size:30px;line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:0 0 10px}
+.trk{height:12px;border-top:2px solid var(--a);border-bottom:2px solid var(--a);
+  background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 13px);border-radius:1px}
+.sub{color:var(--mute);font-size:14px;margin:10px 0 0}
+
+/* location switch */
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 0 14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:14px;padding:4px}
+.tab{border:0;background:transparent;color:var(--mute);border-radius:10px;min-height:46px;font-size:17px;font-weight:700;cursor:pointer;transition:background .15s,color .15s}
+.tab.on{background:var(--a);color:var(--on-a)}
+
+/* verdict: two-aspect signal */
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-left-width:6px;border-radius:14px;padding:14px;margin-bottom:14px}
+.verdict[data-s="bad"]{border-color:var(--red);background:var(--redbg)}
+.verdict[data-s="ok"]{border-color:var(--green);background:var(--greenbg)}
+.signal{display:flex;flex-direction:column;gap:8px;background:var(--housing);padding:9px 8px;border-radius:24px;grid-row:1}
+.lamp{width:30px;height:30px;border-radius:50%;background:var(--dim);transition:background .2s,box-shadow .2s}
+.verdict[data-s="bad"] .lamp.r{background:#ff4b51;box-shadow:0 0 0 3px rgba(255,75,81,.28),0 0 18px 4px rgba(255,75,81,.55)}
+.verdict[data-s="ok"] .lamp.g{background:#35e39e;box-shadow:0 0 0 3px rgba(53,227,158,.28),0 0 18px 4px rgba(53,227,158,.5)}
+.vt{min-width:0}
+.big{font-size:21px;line-height:1.2;font-weight:800;margin:0 0 4px}
+.verdict[data-s="bad"] .big{color:var(--red)}
+.verdict[data-s="ok"] .big{color:var(--green)}
+.verdict[data-s="idle"] .big{color:var(--mute)}
+.why{margin:0;font-size:14px;color:var(--ink)}
+.verdict[data-s="idle"] .why{color:var(--mute)}
+.rows{grid-column:1/-1;margin-top:6px}
+.rows:empty{display:none}
+.row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.row .tag{font-weight:700;text-align:right}
+
+/* request cards */
+.req{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 12px 14px;margin-bottom:12px;position:relative;overflow:hidden}
+.req::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--a)}
+.req.r2::before{background:var(--amber)}
+.req h2{font-size:15px;font-weight:700;margin:0 0 10px 6px}
+.chips{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-left:6px}
+.chip{min-height:46px;border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;font-size:17px;font-weight:700;cursor:pointer;transition:background .12s,color .12s,border-color .12s}
+.chip:active{transform:scale(.96)}
+.r1 .chip.on{background:var(--a);border-color:var(--a);color:var(--on-a)}
+.r2 .chip.on{background:var(--amber);border-color:var(--amber);color:var(--on-amber)}
+
+/* matrix */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.card h2{font-size:15px;font-weight:700;margin:0 0 10px}
 .mx{overflow-x:auto}
-table{border-collapse:collapse;margin:0 auto}
-th,td{width:28px;height:30px;text-align:center;font-size:13px;border:1px solid var(--line);padding:0}
-th{color:var(--mute);font-weight:600}
-td.x{background:var(--badbg);color:var(--bad);font-weight:700}
+table{border-collapse:collapse;width:100%;table-layout:fixed;min-width:300px}
+th,td{height:29px;text-align:center;font-size:13px;border:1px solid var(--line);padding:0}
+th{color:var(--mute);font-weight:700;background:transparent}
+th.sel{color:var(--on-a);background:var(--a)}
+td.x{background:var(--redbg);color:var(--red);font-weight:800}
 td.s{background:var(--line)}
 td.hl{outline:3px solid var(--ink);outline-offset:-3px}
-.note{font-size:12.5px;color:var(--mute);margin:6px 0 0}
+.note{font-size:13px;color:var(--mute);margin:10px 0 0}
+details{margin-top:2px}
+summary{font-size:14px;font-weight:700;color:var(--mute);cursor:pointer;padding:8px 2px}
+details .note{margin-top:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <main>
-<h1>Track access checker</h1>
-<div class="tabs" role="tablist"><button class="tab on" id="t-mdd" role="tab">MDD</button><button class="tab" id="t-ecid" role="tab">ECID</button></div>
-<p class="sub" id="sub"></p>
+<header>
+  <h1>TEL Track Access Checker</h1>
+  <div class="trk" aria-hidden="true"></div>
+  <p class="sub" id="sub"></p>
+</header>
 
-<div class="card r1"><h2>Request 1: work zone</h2><div class="chips" id="c1"></div></div>
-<div class="card r2"><h2>Request 2: work zone</h2><div class="chips" id="c2"></div></div>
-
-<div class="res idle" id="res">Select a work zone for each request to check for a conflict.</div>
-
-<div class="card">
-<h2>Conflict matrix</h2>
-<div class="mx"><table id="mx"></table></div>
-<p class="note">Red X means the two requests must merge into one possession. Tap a cell to load that pair.</p>
+<div class="tabs" role="tablist" aria-label="Location">
+  <button class="tab on" id="t-mdd" role="tab">MDD</button>
+  <button class="tab" id="t-ecid" role="tab">ECID</button>
 </div>
 
-<p class="note" id="foot"></p>
+<section class="verdict" id="res" data-s="idle" role="status" aria-live="polite">
+  <div class="signal" aria-hidden="true"><div class="lamp r"></div><div class="lamp g"></div></div>
+  <div class="vt"><p class="big" id="vbig"></p><p class="why" id="vwhy"></p></div>
+  <div class="rows" id="vrows"></div>
+</section>
+
+<section class="req r1"><h2>Request 1: work zone</h2><div class="chips" id="c1"></div></section>
+<section class="req r2"><h2>Request 2: work zone</h2><div class="chips" id="c2"></div></section>
+
+<section class="card">
+  <h2>Conflict matrix</h2>
+  <div class="mx"><table id="mx"></table></div>
+  <p class="note">Red ✖ means the two requests must merge into one possession. Tap a cell to load that pair.</p>
+</section>
+
+<details>
+  <summary>Notes and limits</summary>
+  <p class="note" id="foot"></p>
+</details>
 </main>
 <script>
 var D={
 mdd:{
- sub:"MDD: Pick one work zone as per request.",
- color:"#0d5c63",
+ sub:"MDD: Operations Circular 48/2025, Table 1. Pick one work zone as per request.",
+ color:"#0d7c86",
  Z:["A","B","C","D","E","F","G","H","I","J","K"],
  P:{A:["B","F"],B:["A","C"],C:["B","D","G"],D:["C","G","F"],E:["F"],F:["E","A","D","G"],G:["C","D","F"],H:["I"],I:["H","J"],J:["I","K"],K:["J"]},
  S:{H:"S3\u2013S12",I:"S13\u2013S24",J:"S25\u2013S36",K:"S37\u2013S45"},
  foot:"The Level Crossing is a protected zone in Annex A but is not in Table 1, so it is not checked here. Zone D needs no protected zone when the work is at the Wash Plant; that exception is not applied. Check the original circular before operational use."
 },
 ecid:{
- sub:"ECID: Pick one work zone as per request.",
- color:"#1a3f7a",
+ sub:"ECID: protected zone table. Pick one work zone as per request.",
+ color:"#2a5db0",
  Z:["A","B","C","D","E","F","G","H","I","J","K","L"],
  P:{A:["B","E","G","H"],B:["A","C","D","H","I","L"],C:["B","D"],D:["B","C","L"],E:["A"],F:["L"],G:["A","H"],H:["A","B","G","I"],I:["B","H","J","L"],J:["I","L"],K:[],L:["B","D","F","I","J"]},
  S:{A:"RT1 & RT4",B:"RT2",C:"RT3",D:"TWP",G:"S1\u2013S12",H:"S13\u2013S24",I:"S25\u2013S32",J:"S33\u2013S38",K:"RS Workshop, Pway/Loco workshop"},
@@ -94,22 +156,19 @@ try{var sv=localStorage.getItem("trackLoc");if(sv&&D[sv])loc=sv}catch(e){}
 function conflict(a,b){return a!==b&&(P[a].indexOf(b)>-1||P[b].indexOf(a)>-1)}
 function nm(z){return "Zone "+z+(S[z]?" ("+S[z]+")":"")}
 function pl(z){return P[z].length?P[z].join(", "):"none listed"}
+function $(id){return document.getElementById(id)}
 function setLoc(k){
   loc=k;var d=D[k];Z=d.Z;P=d.P;S=d.S;sel=[null,null];
   document.documentElement.setAttribute("data-loc",k);
-  document.getElementById("sub").textContent=d.sub;
-  document.getElementById("foot").textContent=d.foot;
-  document.getElementById("t-mdd").className="tab"+(k==="mdd"?" on":"");
-  document.getElementById("t-ecid").className="tab"+(k==="ecid"?" on":"");
-  document.getElementById("t-mdd").setAttribute("aria-selected",k==="mdd");
-  document.getElementById("t-ecid").setAttribute("aria-selected",k==="ecid");
+  $("sub").textContent=d.sub;$("foot").textContent=d.foot;
+  ["mdd","ecid"].forEach(function(x){var t=$("t-"+x);t.className="tab"+(k===x?" on":"");t.setAttribute("aria-selected",k===x)});
   var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d.color);
-  document.title=k.toUpperCase()+" Track Access Checker";
+  document.title="Track Access Checker \u2013 "+k.toUpperCase();
   try{localStorage.setItem("trackLoc",k)}catch(e){}
   render();
 }
 function chips(i){
-  var el=document.getElementById("c"+(i+1));el.innerHTML="";
+  var el=$("c"+(i+1));el.innerHTML="";
   Z.forEach(function(z){
     var b=document.createElement("button");b.className="chip"+(sel[i]===z?" on":"");b.textContent=z;
     b.setAttribute("aria-pressed",sel[i]===z);
@@ -121,28 +180,29 @@ function protRows(a,b){
   return '<div class="row"><span>'+nm(a)+' needs</span><span class="tag">'+pl(a)+'</span></div>'+
          '<div class="row"><span>'+nm(b)+' needs</span><span class="tag">'+pl(b)+'</span></div>';
 }
+function show(state,big,why,rows){
+  $("res").setAttribute("data-s",state);$("vbig").textContent=big;$("vwhy").innerHTML=why;$("vrows").innerHTML=rows||"";
+}
 function render(){
   chips(0);chips(1);
-  var r=document.getElementById("res"),a=sel[0],b=sel[1];
-  if(!a||!b){r.className="res idle";r.textContent="Select a work zone for each request to check for a conflict.";}
-  else if(a===b){r.className="res bad";r.innerHTML='<p class="big">Same zone</p><p>Both requests want Zone '+a+'. They cannot work the same zone separately; merge into one possession.</p>';}
+  var a=sel[0],b=sel[1];
+  if(!a||!b){show("idle","Pick two zones","Select a work zone for each request to check for a conflict.");}
+  else if(a===b){show("bad","Same zone","Both requests want Zone "+a+". They cannot work the same zone separately; merge into one possession.");}
   else if(conflict(a,b)){
     var why=[];
     if(P[a].indexOf(b)>-1)why.push("Zone "+b+" is a protected zone for Zone "+a);
     if(P[b].indexOf(a)>-1)why.push("Zone "+a+" is a protected zone for Zone "+b);
-    r.className="res bad";
-    r.innerHTML='<p class="big">Conflict: merge into one possession</p><p>'+why.join(". ")+'. One PIC rides on the other\u2019s possession.</p>'+protRows(a,b);
+    show("bad","Conflict: merge into one possession",why.join(". ")+". One PIC rides on the other\u2019s possession.",protRows(a,b));
   } else {
     var sh=P[a].filter(function(x){return P[b].indexOf(x)>-1});
-    r.className="res ok";
-    r.innerHTML='<p class="big">No conflict: separate Depot TOAs</p><p>'+(sh.length?'Shared protected zone'+(sh.length>1?'s':'')+': '+sh.join(", ")+'. Shared protection alone is not a conflict.':'No shared protected zones.')+'</p>'+protRows(a,b);
+    show("ok","No conflict: separate Depot TOAs",sh.length?"Shared protected zone"+(sh.length>1?"s":"")+": "+sh.join(", ")+". Shared protection alone is not a conflict.":"No shared protected zones.",protRows(a,b));
   }
   mx();
 }
 function mx(){
-  var t=document.getElementById("mx"),h="<tr><th></th>"+Z.map(function(z){return"<th>"+z+"</th>"}).join("")+"</tr>";
+  var t=$("mx"),h="<tr><th></th>"+Z.map(function(z){return'<th class="'+(sel.indexOf(z)>-1?"sel":"")+'">'+z+"</th>"}).join("")+"</tr>";
   Z.forEach(function(r){
-    h+="<tr><th>"+r+"</th>";
+    h+='<tr><th class="'+(sel.indexOf(r)>-1?"sel":"")+'">'+r+"</th>";
     Z.forEach(function(c){
       var cf=conflict(r,c),cls=r===c?"s":(cf?"x":""),txt=cf?"\u2716":"";
       var on=(sel[0]===r&&sel[1]===c)||(sel[0]===c&&sel[1]===r);
@@ -155,8 +215,8 @@ function mx(){
     td.onclick=function(){sel=[td.dataset.r,td.dataset.c];render()};
   });
 }
-document.getElementById("t-mdd").onclick=function(){setLoc("mdd")};
-document.getElementById("t-ecid").onclick=function(){setLoc("ecid")};
+$("t-mdd").onclick=function(){setLoc("mdd")};
+$("t-ecid").onclick=function(){setLoc("ecid")};
 setLoc(loc);
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){});});}
 </script>
